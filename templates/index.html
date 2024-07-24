@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>To-Do List</title>
+</head>
+<body>
+<div class="container">
+    <h1>To-Do List</h1>
+    <form id="add-todo-form" action="{{ url_for('add_todo') }}" method="post">
+        <input type="text" id="todo-input" name="todo" placeholder="Enter a new task" required>
+        <button type="submit">Add</button>
+    </form>
+    <ul id="todo-list">
+        {% for i, todo in todos %}
+        <li>
+            {{ todo }}
+            <form action="{{ url_for('delete_todo', todo_id=i) }}" method="post" style="display:inline;">
+                <button type="submit" class="delete-button">Delete</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>
