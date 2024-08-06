@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    
     async function updateTodoList() {
         try {
             const response = await fetch('/');
