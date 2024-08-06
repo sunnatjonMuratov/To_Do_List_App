@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const todoInput = document.getElementById('todo-input');
     const todoList = document.getElementById('todo-list');
 
+    
     addTodoForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    
     todoList.addEventListener('click', async (e) => {
         if (e.target.classList.contains('delete-button')) {
             const todoId = e.target.getAttribute('data-id');
