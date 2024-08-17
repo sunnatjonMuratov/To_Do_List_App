@@ -3,57 +3,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const todoInput = document.getElementById('todo-input');
     const todoList = document.getElementById('todo-list');
 
-    
-    addTodoForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const todo = todoInput.value;
-        if (!todo) return;
-
+    const fetchRequest = async (url, options) => {
         try {
-            await fetch('/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({ todo })
-            });
-
-            todoInput.value = '';
+            await fetch(url, options);
             updateTodoList();
         } catch (error) {
             console.error('Error:', error);
         }
-    });
+    };
 
-    
-    todoList.addEventListener('click', async (e) => {
-        if (e.target.classList.contains('delete-button')) {
-            const todoId = e.target.getAttribute('data-id');
-
-            try {
-                await fetch(`/delete/${todoId}`, {
-                    method: 'POST',
-                });
-
-                updateTodoList();
-            } catch (error) {
-                console.error('Error:', error);
-            }
+    addTodoForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (todoInput.value) {
+            fetchRequest('/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ todo: todoInput.value })
+            });
+            todoInput.value = '';
         }
     });
 
-    
-    async function updateTodoList() {
+    todoList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('delete-button')) {
+            fetchRequest(`/delete/${e.target.getAttribute('data-id')}`, { method: 'POST' });
+        }
+    });
+
+    const updateTodoList = async () => {
         try {
             const response = await fetch('/');
-            const text = await response.text();
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(text, 'text/html');
-            const newTodoList = doc.getElementById('todo-list').innerHTML;
-            todoList.innerHTML = newTodoList;
+            const doc = new DOMParser().parseFromString(await response.text(), 'text/html');
+            todoList.innerHTML = doc.getElementById('todo-list').innerHTML;
         } catch (error) {
             console.error('Error:', error);
         }
-    }
+    };
 });
